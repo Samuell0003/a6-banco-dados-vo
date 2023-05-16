@@ -1,7 +1,6 @@
 package com.iftm.exercicio02.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -29,8 +28,13 @@ public class User implements Serializable {
     private String socialNetwork;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
     private List<Email> emails = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "user_groups",
+              joinColumns = {@JoinColumn(name = "user_id")},
+              inverseJoinColumns = {@JoinColumn(name = "group_id")})
+    private List<Group> groups = new ArrayList<>();
 
     public User() {
     }
@@ -44,13 +48,11 @@ public class User implements Serializable {
         this.socialNetwork = socialNetwork;
     }
 
-    @JsonIgnore
-    public List<Email> getEmailList() {
-        return emails;
-    }
 
-    public void setEmailList(List<Email> emailList) {
-        this.emails = emailList;
+
+    public void addGroup(Group group) {
+        this.groups.add(group);
+        group.getUsers().add(this);
     }
 
     public void addEmail(Email email) {
@@ -61,6 +63,23 @@ public class User implements Serializable {
     public void removeEmail(Email email) {
         email.setUser(null);
         emails.remove(email);
+    }   
+
+    
+    public List<Email> getEmails() {
+        return emails;
+    }
+
+    public void setEmails(List<Email> emails) {
+        this.emails = emails;
+    }
+
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
     }
 
     public Long getId() {
@@ -118,6 +137,10 @@ public class User implements Serializable {
     public void setSocialNetwork(String socialNetwork) {
         this.socialNetwork = socialNetwork;
     }
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName, userName, password, phone, socialNetwork);
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -127,10 +150,6 @@ public class User implements Serializable {
         return Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(userName, user.userName) && Objects.equals(password, user.password) && Objects.equals(phone, user.phone) && Objects.equals(socialNetwork, user.socialNetwork);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, firstName, lastName, userName, password, phone, socialNetwork);
-    }
 
     @Override
     public String toString() {

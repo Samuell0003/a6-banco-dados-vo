@@ -1,53 +1,57 @@
 package com.iftm.exercicio02.controllers;
 
-import com.iftm.exercicio02.data.vo.UserVO;
-import com.iftm.exercicio02.services.UserService;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+
+import com.iftm.exercicio02.data.vo.GroupVO;
+import com.iftm.exercicio02.services.GroupService;
 import com.iftm.exercicio02.utils.MediaType;
-import io.swagger.v3.oas.annotations.tags.Tag;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.*;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping("api/v1/user")
-@Tag(name = "User", description = "Endpoint for managing users.")
-public class UserController {
+@RequestMapping("api/v1/group")
+@Tag(name = "Group", description = "Endpoint for managing groups.")
+public class GroupController {
 
     @Autowired
-    private UserService service;
+    GroupService service;
 
-    @GetMapping(produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
+    @GetMapping
     @Operation(
-        summary = "Find all users.", description = "Find all users.", tags = {"User"},
+        summary = "Find all groups.", description = "Find all groups.", tags = {"Group"},
         responses = {
             @ApiResponse(description = "Sucess.", responseCode = "200",
-            content = {
-                @Content(mediaType = MediaType.APPLICATION_JSON,
-                    array = @ArraySchema(schema = @Schema(implementation = UserVO.class)))
+                content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON,
+                            array =  @ArraySchema(schema = @Schema(implementation = GroupVO.class)))
                 }
             ),
             @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
             @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
             @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
             @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content),
-    })
-    public List<UserVO> findAll() {
+        }
+    )
+    public List<GroupVO> findAll() {
         return service.findAll();
     }
 
-    @GetMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
+    @GetMapping("/{id}")
     @Operation(
-        summary = "Find a user by ID.", description = "Find a user by ID.", tags = {"User"},
+        summary = "Find a group by ID.", description = "Find a group by ID.", tags = {"Group"},
         responses = {
             @ApiResponse(description = "Success", responseCode = "200",
                 content = {
                     @Content(mediaType = MediaType.APPLICATION_JSON,
-                            schema = @Schema(implementation = UserVO.class)
+                        schema = @Schema(implementation = GroupVO.class)
                     )
                 }
             ),
@@ -57,39 +61,18 @@ public class UserController {
             @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
         }
     )
-    public UserVO findById(@PathVariable("id") Long id) {
+    public GroupVO findById(@PathVariable("id") Long id) {
         return service.findById(id);
     }
 
-    @GetMapping(value = "group/{name}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
+ 
+    @PostMapping
     @Operation(
-        summary = "Find a user by Group.", description = "Find a user by Group.", tags = {"User"},
-        responses = {
-            @ApiResponse(description = "Success", responseCode = "200",
-                content = {
-                    @Content(mediaType = MediaType.APPLICATION_JSON,
-                            schema = @Schema(implementation = UserVO.class)
-                    )
-                }
-            ),
-            @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
-            @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
-            @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-            @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
-        }
-    )
-    public List<UserVO> findUsersByGroupName(@PathVariable("name") String groupName) {
-        return service.findByGroupName(groupName);
-    }
-
-    @PostMapping(consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML},
-                 produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML})
-    @Operation(
-        summary = "Create a user.", description = "Create a user.", tags = {"User"},
+        summary = "Create a group.", description = "Create a group.", tags = {"Group"},
         responses = {
             @ApiResponse(description = "Success", responseCode = "200",
                 content = @Content(
-                    schema = @Schema(implementation = UserVO.class)
+                    schema = @Schema(implementation = GroupVO.class)
                 )
             ),
             @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
@@ -98,18 +81,17 @@ public class UserController {
             @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
         }
     )
-    public UserVO save(@RequestBody UserVO userVO) {
-        return service.save(userVO);
+    public GroupVO save(@RequestBody GroupVO groupVO) {
+        return service.save(groupVO);
     }
 
-    @PutMapping(produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML },
-                consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
+    @PostMapping("insert-users")
     @Operation(
-        summary = "Update a user.", description = "Update a user.", tags = {"User"},
+        summary = "Insert a user in group.", description = "Insert a user in group.", tags = {"Group"},
         responses = {
             @ApiResponse(description = "Success", responseCode = "200",
                 content = @Content(
-                        schema = @Schema(implementation = UserVO.class)
+                    schema = @Schema(implementation = GroupVO.class)
                 )
             ),
             @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
@@ -118,13 +100,32 @@ public class UserController {
             @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
         }
     )
-    public UserVO update(@RequestBody UserVO userVO) {
-        return service.update(userVO);
+    public GroupVO insertUsers(@RequestBody GroupVO groupVO) {
+        return service.insertUsers(groupVO);
+    }
+
+    @PutMapping
+    @Operation(
+        summary = "Update a group.", description = "Update a group.", tags = {"Group"},
+        responses = {
+            @ApiResponse(description = "Success", responseCode = "200",
+                content = @Content(
+                    schema = @Schema(implementation = GroupVO.class)
+                )
+            ),
+            @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+            @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+            @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+            @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
+        }
+    )
+    public GroupVO update(@RequestBody GroupVO groupVO) {
+        return service.update(groupVO);
     }
 
     @DeleteMapping("/{id}")
     @Operation(
-        summary = "Deletes a User by ID.", description = "Deletes a User by ID.", tags = {"User"},
+        summary = "Deletes a Group by ID.", description = "Deletes a Group by ID.", tags = {"Group"},
         responses = {
             @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
             @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),

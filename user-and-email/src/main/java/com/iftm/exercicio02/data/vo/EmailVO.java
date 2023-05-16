@@ -1,8 +1,6 @@
 package com.iftm.exercicio02.data.vo;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.iftm.exercicio02.models.User;
-import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.Objects;

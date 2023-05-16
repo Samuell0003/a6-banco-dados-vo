@@ -3,13 +3,11 @@ package com.iftm.exercicio02.services;
 import com.iftm.exercicio02.data.vo.EmailVO;
 import com.iftm.exercicio02.mapper.DozerMapper;
 import com.iftm.exercicio02.models.Email;
-import com.iftm.exercicio02.models.User;
 import com.iftm.exercicio02.repositories.EmailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class EmailService {

@@ -3,7 +3,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/user_and_emails?useTimezone=true&serverTimezone=UTC
     username: root
-    password:
+    password: S@m16162
   jpa:
     hibernate:
       ddl-auto: update
@@ -12,3 +12,8 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
     show-sql: true
+springdoc:
+  paths-to-match:
+    - /api/**/v1/**
+  swagger-ui:
+    use-root-path: true

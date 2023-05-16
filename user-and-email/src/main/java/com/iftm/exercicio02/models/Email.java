@@ -1,6 +1,5 @@
 package com.iftm.exercicio02.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
@@ -24,8 +23,9 @@ public class Email implements Serializable {
     private String body;
     @Column(name = "attachment_mail", nullable = false)
     private String attachment;
+
     @ManyToOne
-    @JsonBackReference
+    @JsonIgnore
     private User user;
 
     public Email() {

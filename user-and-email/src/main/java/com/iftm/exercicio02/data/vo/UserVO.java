@@ -7,7 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class UserVO implements Serializable {
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.RepresentationModel;
+
+public class UserVO extends RepresentationModel<UserVO> implements Serializable {
 
     private Long id;
     private String firstName;
